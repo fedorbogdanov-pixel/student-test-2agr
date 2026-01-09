@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Насколько ты прилежный студент Иркутского аграрного техникума?</title>
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f9e8, #d0e7b9);
+      background-image: url("image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63-31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-5 60c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-50-2c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-21-31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm75 20c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM48 58c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm16-31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-58 40c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm84-18c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23a8d5a2' opacity='0.2'/%3E%3C/svg%3E");
+      padding: 0;
+      margin: 0;
+      color: #2c5f2d;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .logo img {
+      max-width: 180px;
+      height: auto;
+      border-radius: 6px;
+    }
+    h1 {
+      text-align: center;
+      color: #1b5e20;
+      margin: 10px 0 20px;
+      font-size: 24px;
+    }
+    .instruction {
+      text-align: center;
+      margin-bottom: 25px;
+      font-style: italic;
+      color: #388e3c;
+    }
+    #nameInputSection {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    #studentName {
+      padding: 10px;
+      font-size: 16px;
+      width: 280px;
+      border: 2px solid #a5d6a7;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #c8e6c9;
+    }
+    .question h3 {
+      margin-bottom: 10px;
+      color: #2e7d32;
+    }
+    .options label {
+      display: block;
+      margin: 6px 0;
+      padding: 9px;
+      background: #f5f9ee;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+    .options label:hover {
+      background: #e8f5e9;
+    }
+    button {
+      display: block;
+      margin: 25px auto;
+      padding: 11px 28px;
+      font-size: 17px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #388e3c;
+    }
+    #result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #e8f5e9;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+    #result h2 {
+      color: #1b5e20;
+    }
+    #downloadBtn {
+      background: #2e7d32;
+      margin-top: 15px;
+    }
+    #downloadBtn:hover {
+      background: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX///8AAACAgICDg4OFhYWHh4eIiIiKioqMjIyNjY2Ojo6Pj4+QkJCRkZGTk5OUlJSVlZWVlpaWmJiYmpqa...[ОБРЕЗАНО ДЛЯ КРАТКОСТИ]..." alt="Логотип Иркутского аграрного техникума">
+    </div>
+
+    <h1>📚 Насколько ты прилежный студент Иркутского аграрного техникума? 📚</h1>
+    
+    <div id="nameInputSection">
+      <p>Пожалуйста, укажи своё имя:</p>
+      <input type="text" id="studentName" placeholder="Например: Иван Петров" maxlength="50">
+    </div>
+
+    <p class="instruction">Выбери один вариант ответа на каждый из 10 вопросов.</p>
+
+    <form id="studentForm" style="display:none;">
+      <!-- Вопросы -->
+      <div class="question"><h3>1. Как часто ты посещаешь занятия?</h3>
+        <div class="options">
+          <label><input type="radio" name="q1" value="1"> Пропускаю, если не хочу идти</label>
+          <label><input type="radio" name="q1" value="3"> Хожу, но иногда пропускаю без уважительной причины</label>
+          <label><input type="radio" name="q1" value="5"> Посещаю все занятия — даже когда болею, смотрю записи!</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>2. Готовишься ли к практическим и лабораторным работам заранее?</h3>
+        <div class="options">
+          <label><input type="radio" name="q2" value="1"> Только на месте, «на коленке»</label>
+          <label><input type="radio" name="q2" value="3"> Иногда читаю методичку перед парой</label>
+          <label><input type="radio" name="q2" value="5"> Всегда изучаю материал и готовлю оборудование/данные заранее</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>3. Как ты относишься к дедлайнам по заданиям?</h3>
+        <div class="options">
+          <label><input type="radio" name="q3" value="1"> Сдаю с опозданием или не сдаю вовсе</label>
+          <label><input type="radio" name="q3" value="3"> Стараюсь уложиться, но иногда просрочиваю</label>
+          <label><input type="radio" name="q3" value="5"> Всегда сдаю вовремя — и даже раньше срока!</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>4. Участвуешь ли в внеучебной жизни техникума (мероприятия, конкурсы, проекты)?</h3>
+        <div class="options">
+          <label><input type="radio" name="q4" value="1"> Никогда — это не моё</label>
+          <label><input type="radio" name="q4" value="3"> Иногда за компанию</label>
+          <label><input type="radio" name="q4" value="5"> Активно участвую — это часть моего развития!</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>5. Пользуешься ли дополнительными материалами (учебники, онлайн-курсы, видео)?</h3>
+        <div class="options">
+          <label><input type="radio" name="q5" value="1"> Только конспектами одногруппников</label>
+          <label><input type="radio" name="q5" value="3"> Иногда смотрю что-то дополнительно</label>
+          <label><input type="radio" name="q5" value="5"> Регулярно углубляю знания через книги и онлайн-ресурсы</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>6. Как ты ведёшь себя на занятиях?</h3>
+        <div class="options">
+          <label><input type="radio" name="q6" value="1"> Чатаюсь, играю в телефон</label>
+          <label><input type="radio" name="q6" value="3"> Слушаю, но редко участвую</label>
+          <label><input type="radio" name="q6" value="5"> Внимателен, задаю вопросы, участвую в обсуждениях</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>7. Делаешь ли домашние задания самостоятельно?</h3>
+        <div class="options">
+          <label><input type="radio" name="q7" value="1"> Копирую у других или из интернета</label>
+          <label><input type="radio" name="q7" value="3"> Делаю сам, но с подсказками</label>
+          <label><input type="radio" name="q7" value="5"> Всегда выполняю сам — это мой путь к знаниям!</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>8. Следишь ли за своими оценками и стараешься их улучшить?</h3>
+        <div class="options">
+          <label><input type="radio" name="q8" value="1"> Мне всё равно, главное — зачёт</label>
+          <label><input type="radio" name="q8" value="3"> Иногда пересдаю, если совсем плохо</label>
+          <label><input type="radio" name="q8" value="5"> Анализирую ошибки и всегда стремлюсь к «отлично»</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>9. Уважаешь ли ты преподавателей и сотрудников техникума?</h3>
+        <div class="options">
+          <label><input type="radio" name="q9" value="1"> Общаюсь грубо или игнорирую</label>
+          <label><input type="radio" name="q9" value="3"> Вежлив, но без особого уважения</label>
+          <label><input type="radio" name="q9" value="5"> Всегда вежлив, благодарен за знания и поддержку</label>
+        </div>
+      </div>
+
+      <div class="question"><h3>10. Считаешь ли ты обучение в техникуме важным для своего будущего?</h3>
+        <div class="options">
+          <label><input type="radio" name="q10" value="1"> Это просто формальность</label>
+          <label><input type="radio" name="q10" value="3"> Да, но не всегда прилагаю усилия</label>
+          <label><input type="radio" name="q10" value="5"> Абсолютно! Каждое занятие — шаг к моей профессии</label>
+        </div>
+      </div>
+
+      <button type="button" onclick="checkAnswers()">Получить результат</button>
+    </form>
+
+    <button id="startBtn" onclick="startTest()" style="display:block; margin:20px auto;">Начать тест</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+
+    function startTest() {
+      const name = document.getElementById('studentName').value.trim();
+      if (!name) {
+        alert('Пожалуйста, введи своё имя!');
+        return;
+      }
+      document.getElementById('nameInputSection').style.display = 'none';
+      document.getElementById('startBtn').style.display = 'none';
+      document.getElementById('studentForm').style.display = 'block';
+      window.studentName = name;
+    }
+
+    function checkAnswers() {
+      const form = document.getElementById('studentForm');
+      const resultDiv = document.getElementById('result');
+      let total = 0;
+      let answered = 0;
+
+      for (let i = 1; i <= 10; i++) {
+        const selected = form.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) {
+          total += parseInt(selected.value);
+          answered++;
+        }
+      }
+
+      if (answered < 10) {
+        alert('Пожалуйста, ответь на все вопросы!');
+        return;
+      }
+
+      let title = '';
+      let message = '';
+
+      if (total <= 20) {
+        title = 'Студент-невидимка';
+        message = 'Учёба пока не в приоритете... Но в техникуме тебя ждут! Начни с малого — приходи на пары!';
+      } else if (total <= 35) {
+        title = 'Обычный студент';
+        message = 'Ты учишься, но мог бы больше! Немного дисциплины — и ты станешь примером для группы.';
+      } else if (total <= 45) {
+        title = 'Прилежный студент';
+        message = 'Ты серьёзно относишься к учёбе! Твои знания — твой капитал. Так держать!';
+      } else {
+        title = 'Золотой студент Иркутского аграрного техникума';
+        message = 'Ты — гордость кафедры! Такой студент мечта любого преподавателя. Респект!';
+      }
+
+      const resultHTML = `
+        <h2>🎉 ${title}!</h2>
+        <p><strong>Студент:</strong> ${window.studentName}</p>
+        <p><strong>Баллы:</strong> ${total} из 50</p>
+        <p>${message}</p>
+        <button id="downloadBtn" onclick="generatePDF('${title}', ${total})">📥 Скачать сертификат в PDF</button>
+      `;
+      resultDiv.innerHTML = resultHTML;
+      resultDiv.style.display = 'block';
+    }
+
+    async function generatePDF(title, score) {
+      const doc = new jsPDF();
+
+      // === ЛОГОТИП КАК BASE64 (ВСТРОЕННЫЙ) ===
+      const logoData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX///8AAACAgICDg4OFhYWHh4eIiIiKioqMjIyNjY2Ojo6Pj4+QkJCRkZGTk5OUlJSVlZWVlpaWmJiYmpqa..."; // ← ЗДЕСЬ ВАША БАЗА64 СТРОКА
+
+      // Позиционирование
+      const pageWidth = doc.internal.pageSize.width;
+      const centerX = pageWidth / 2;
+
+      // Логотип (если загружен)
+      if (logoData) {
+        try {
+          doc.addImage(logoData, 'PNG', centerX - 20, 15, 40, 40);
+        } catch (e) {
+          console.warn('Ошибка добавления логотипа в PDF');
+        }
+      }
+
+      // Текст
+      doc.setFontSize(16);
+      doc.text("Иркутский аграрный техникум", centerX, logoData ? 65 : 35, null, null, "center");
+
+      doc.setFontSize(20);
+      doc.text("СЕРТИФИКАТ", centerX, logoData ? 75 : 45, null, null, "center");
+
+      doc.setFontSize(12);
+      doc.text("Настоящий сертификат подтверждает, что", centerX, logoData ? 90 : 60, null, null, "center");
+      doc.setFontSize(14);
+      doc.text(window.studentName, centerX, logoData ? 97 : 67, null, null, "center");
+      doc.setFontSize(12);
+      doc.text("продемонстрировал уровень учебной добросовестности:", centerX, logoData ? 104 : 74, null, null, "center");
+
+      doc.setFontSize(16);
+      doc.text(title, centerX, logoData ? 118 : 88, null, null, "center");
+
+      doc.setFontSize(12);
+      doc.text(`Результат: ${score} из 50 баллов`, centerX, logoData ? 128 : 98, null, null, "center");
+
+      doc.text("Дата выдачи: " + new Date().toLocaleDateString('ru-RU'), centerX, logoData ? 140 : 110, null, null, "center");
+
+      // Подпись
+      const signatureY = logoData ? 160 : 130;
+      doc.setLineWidth(0.5);
+      doc.line(40, signatureY, 170, signatureY);
+      doc.setFontSize(11);
+      doc.text("Куратор группы 741 / Зав. кафедрой информатики", centerX, signatureY + 5, null, null, "center");
+
+      // Сохранить
+      doc.save(`Сертификат_студента_${window.studentName.replace(/\s+/g, '_')}.pdf`);
+    }
+  </script>
+</body>
+</html>
